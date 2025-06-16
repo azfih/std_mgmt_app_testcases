@@ -9,10 +9,10 @@ pipeline {
             steps {
                 sh '''
                     # Update package list
-                    sudo apt-get update -y
+                    apt-get update -y
                     
                     # Install Chrome dependencies
-                    sudo apt-get install -y \
+                    apt-get install -y \
                         wget \
                         gnupg \
                         unzip \
@@ -38,16 +38,16 @@ pipeline {
                     if ! command -v google-chrome &> /dev/null; then
                         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
                         echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-                        sudo apt-get update -y
-                        sudo apt-get install -y google-chrome-stable
+                        apt-get update -y
+                        apt-get install -y google-chrome-stable
                     fi
                     
                     # Install ChromeDriver
                     CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3)
                     CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
                     wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-                    sudo unzip -o /tmp/chromedriver.zip -d /usr/local/bin/
-                    sudo chmod +x /usr/local/bin/chromedriver
+                    unzip -o /tmp/chromedriver.zip -d /usr/local/bin/
+                    chmod +x /usr/local/bin/chromedriver
                     rm /tmp/chromedriver.zip
                 '''
             }
