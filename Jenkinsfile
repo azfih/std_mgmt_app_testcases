@@ -39,7 +39,7 @@ pipeline {
       sh 'rm -rf $VENV_DIR'
     }
     success {
-      echo '✅ Tests Passed!!'
+      echo '✅ Tests Passed!'
     }
     failure {
       echo '❌ Some tests failed.'
