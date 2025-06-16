@@ -13,19 +13,20 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 class StudentManagementSystemTests(unittest.TestCase):
     
     @classmethod
-    def setUpClass(cls):
-        """Set up Chrome driver with headless options"""
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        
-        cls.driver = webdriver.Chrome(options=chrome_options)
-        cls.driver.implicitly_wait(10)
-        # Update this URL to match your EC2 instance
-        cls.base_url = "http://localhost"  # Change to your EC2 public IP/domain
+def setUpClass(cls):
+    """Set up Chrome driver with headless options"""
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+
+    cls.driver = webdriver.Chrome(options=chrome_options)
+    cls.driver.implicitly_wait(10)
+    # Update this URL to match your EC2 instance
+    cls.base_url = "http://3.89.8.171/"  # Change to your EC2 public IP/domain
         
         # Test data
         cls.test_user = {
