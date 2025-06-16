@@ -60,7 +60,7 @@ pipeline {
                         sudo unzip -o /tmp/chromedriver.zip -d /tmp/
                         sudo mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
                         sudo chmod +x /usr/local/bin/chromedriver
-                        rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
+                        sudo rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
                         echo "ChromeDriver installed successfully via Chrome for Testing API"
                     else
                         echo "Chrome for Testing API failed, trying alternative method..."
@@ -75,7 +75,7 @@ pipeline {
                             sudo unzip -o /tmp/chromedriver.zip -d /tmp/
                             sudo mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
                             sudo chmod +x /usr/local/bin/chromedriver
-                            rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
+                            sudo rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
                             echo "ChromeDriver installed successfully via latest stable"
                         else
                             echo "All ChromeDriver download methods failed!"
