@@ -10,7 +10,7 @@ pipeline {
         sh '''
             sudo apt-get update -y
 
-            # Install Chrome and dependencies (revised)
+            # Install Chrome and dependencies
             sudo apt-get install -y \
                 wget \
                 gnupg \
@@ -35,7 +35,7 @@ pipeline {
                 libu2f-udev \
                 libvulkan1
 
-            # Install Chrome
+            # Install Google Chrome (if not already installed)
             if ! command -v google-chrome &> /dev/null; then
                 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
                 echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
@@ -43,9 +43,8 @@ pipeline {
                 sudo apt-get install -y google-chrome-stable
             fi
 
-            # Install ChromeDriver
-            CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3)
-            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
+            # Install specific ChromeDriver version (126)
+            CHROMEDRIVER_VERSION=126.0.6478.57
             wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
             sudo unzip -o /tmp/chromedriver.zip -d /usr/local/bin/
             sudo chmod +x /usr/local/bin/chromedriver
@@ -53,6 +52,7 @@ pipeline {
         '''
     }
 }
+
 
         stage('Checkout Test Repo') {
             steps {
