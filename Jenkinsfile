@@ -4,7 +4,8 @@ pipeline {
         VENV_DIR = 'selenium-env'
         DISPLAY = ':99'
     }
-    stage('Install System Dependencies') {
+    stages {
+        stage('Install System Dependencies') {
     steps {
         sh '''
             apt-get update -y
