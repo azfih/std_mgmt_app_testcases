@@ -37,14 +37,15 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     apt-get update && \
     apt-get install -y google-chrome-stable
 
-# Install ChromeDriver dynamically
+# Install ChromeDriver dynamically - Fixed extraction path
 RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3) && \
     CHROMEDRIVER_URL=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json" | \
         jq -r --arg version "$CHROME_VERSION" '.versions[] | select(.version | startswith($version)) | .downloads.chromedriver[] | select(.platform=="linux64") | .url' | head -1) && \
     wget -O /tmp/chromedriver.zip "$CHROMEDRIVER_URL" && \
-    unzip -o /tmp/chromedriver.zip -d /usr/local/bin/ && \
+    unzip -o /tmp/chromedriver.zip -d /tmp/ && \
+    mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
-    rm -rf /tmp/chromedriver.zip
+    rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
 
 # Set working directory
 WORKDIR /app
