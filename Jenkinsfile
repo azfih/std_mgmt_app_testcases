@@ -4,54 +4,55 @@ pipeline {
         VENV_DIR = 'selenium-env'
         DISPLAY = ':99'
     }
-    stages {
-        stage('Install System Dependencies') {
-            steps {
-                sh '''
-                    # Update package list
-                    sudo apt-get update -y
-                    
-                    # Install Chrome dependencies
-                    sudo apt-get install -y \
-                        wget \
-                        gnupg \
-                        unzip \
-                        curl \
-                        xvfb \
-                        fonts-liberation \
-                        libappindicator3-1 \
-                        libasound2 \
-                        libatk-bridge2.0-0 \
-                        libdrm2 \
-                        libgtk-3-0 \
-                        libnspr4 \
-                        libnss3 \
-                        libx11-xcb1 \
-                        libxcomposite1 \
-                        libxdamage1 \
-                        libxrandr2 \
-                        xdg-utils \
-                        libxss1 \
-                        libgconf-2-4
-                    
-                    # Install Google Chrome if not present
-                    if ! command -v google-chrome &> /dev/null; then
-                        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-                        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-                        sudo apt-get update -y
-                        sudo apt-get install -y google-chrome-stable
-                    fi
-                    
-                    # Install ChromeDriver
-                    CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3)
-                    CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
-                    wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-                    sudo unzip -o /tmp/chromedriver.zip -d /usr/local/bin/
-                    sudo chmod +x /usr/local/bin/chromedriver
-                    rm /tmp/chromedriver.zip
-                '''
-            }
-        }
+    stage('Install System Dependencies') {
+    steps {
+        sh '''
+            apt-get update -y
+
+            # Install Chrome and dependencies (revised)
+            apt-get install -y \
+                wget \
+                gnupg \
+                unzip \
+                curl \
+                xvfb \
+                fonts-liberation \
+                libappindicator3-1 \
+                libatk-bridge2.0-0 \
+                libdrm2 \
+                libgtk-3-0 \
+                libnspr4 \
+                libnss3 \
+                libx11-xcb1 \
+                libxcomposite1 \
+                libxdamage1 \
+                libxrandr2 \
+                xdg-utils \
+                libxss1 \
+                libxcb1 \
+                libgbm1 \
+                libu2f-udev \
+                libvulkan1
+
+            # Install Chrome
+            if ! command -v google-chrome &> /dev/null; then
+                wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+                echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+                apt-get update -y
+                apt-get install -y google-chrome-stable
+            fi
+
+            # Install ChromeDriver
+            CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3)
+            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
+            wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+            unzip -o /tmp/chromedriver.zip -d /usr/local/bin/
+            chmod +x /usr/local/bin/chromedriver
+            rm /tmp/chromedriver.zip
+        '''
+    }
+}
+
         stage('Checkout Test Repo') {
             steps {
                 checkout scm
